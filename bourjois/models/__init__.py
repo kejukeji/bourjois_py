@@ -2,3 +2,4 @@
 
 from .area import *
 from .stores import *
+from .user import *

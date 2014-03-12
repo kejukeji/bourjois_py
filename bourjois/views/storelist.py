@@ -1,11 +1,15 @@
 # coding: UTF-8
-from flask import render_template,request
+from flask import render_template,request, url_for, redirect
 from bourjois.services.stores_service import *
 from bourjois.services.area_service import *
 from bourjois.utils.get_distance import *
+from bourjois.utils.get_city import *
 
 def get_stores_list(city,latitude,longitude):
-    city_id = get_id_by_city(city)
+    if city:
+        city_id = get_id_by_city(city)
+    else:
+        city_id = 1
     stores_count = find_by_city_count(city_id)
     if latitude == 0 or latitude == None:
             store = find_by_city(city_id)
@@ -29,14 +33,22 @@ def get_stores_list(city,latitude,longitude):
         else:
             return ''
 
+def to_store_list():
+    '''to page'''
+    return render_template('storelist.html',
+                           markd='first')
+
 def find_by_case(case):
     stores = get_result_by_case(case)
     return stores
 
-def goto_storelist():
-    latitude = request.args.get('lat')
-    longitude = request.args.get('lng')
 
 
-def get_city_by_position(lat,lng):
-    
+
+def get_city_by_position():
+    lat = request.args.get('lat')
+    lng = request.args.get('lng')
+    city = get_city(lat,lng)[0,4]
+    # city = None
+    return get_stores_list(city,lat,lng)
+
