@@ -8,7 +8,7 @@ from bourjois.views.storelist import *
 
 from flask.ext.admin import Admin
 from bourjois.views.admin_page.index import HomeView
-#from bourjois.views.admin_page.stroes import StoresView
+from bourjois.views.admin_page.stroes import StoresView
 from bourjois.restfuls.ajax import *
 
 
@@ -26,7 +26,7 @@ api.add_resource(GetArea, '/restful/admin/area')
 admin = Admin(name=u'Home', index_view=HomeView())
 admin.init_app(app)
 
-#admin.add_view(StoresView(db, name=u'门店', endpoint='superuser', category=u"门店管理"))
+admin.add_view(StoresView(db, name=u'门店', endpoint='superuser', category=u"门店管理"))
 
 
 # 手机页面

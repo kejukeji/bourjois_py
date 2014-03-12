@@ -48,7 +48,7 @@ def find_by_case(case):
 def get_city_by_position():
     lat = request.args.get('lat')
     lng = request.args.get('lng')
-    city = get_city(lat,lng)[0,4]
+    city = get_city(lat,lng)
     # city = None
     return get_stores_list(city,lat,lng)
 

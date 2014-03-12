@@ -9,4 +9,4 @@ def get_city(lat,lng):
     xh = XMLHandler()
     xml.sax.parseString(json_string, xh)
     ret = xh.getDict()
-    return ret['city']
+    return ret['city'].encode('UTF-8')
