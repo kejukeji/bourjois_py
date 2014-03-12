@@ -19,7 +19,7 @@ def find_by_city_count(city_id):
     return stores_count
 
 def get_result_by_case(case):
-    stores_count = Stores.query.filter(or_(Stores.name.like('%case%'),Stores.address.like('%case%'))).count()
-    stores = Stores.query.filter(or_(Stores.name.like('%case%'),Stores.address.like('%case%')))
+    stores_count = Stores.query.filter(or_(Stores.name.like('%'+case+'%'),Stores.address.like('%'+case+'%'))).count()
+    stores = Stores.query.filter(or_(Stores.name.like('%'+case+'%'),Stores.address.like('%'+case+'%')))
 
 
