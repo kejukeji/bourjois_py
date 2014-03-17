@@ -15,7 +15,11 @@
     function showPosition(position) {
         var Latitude = position.coords.latitude;
         var Longitude= position.coords.longitude;
-        window.location.href="/storelist?lat="+Latitude+"&lng="+Longitude
+        var first = '{{ first }}';
+        if (first == ''){
+            window.location.href="/storelist?lat="+Latitude+"&lng="+Longitude
+        }
+
     }
 </script>
 </head>

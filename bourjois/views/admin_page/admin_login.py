@@ -7,50 +7,39 @@ from wtforms import form, fields, validators
 from flask.ext import login
 from flask.ext.admin import helpers
 
-from ...models import User
+from ...models.admin_user import AdminUser
 from ...models.database import db
-from ... import app
+from bourjois import app
 
 
 class LoginForm(form.Form):
     """定义用户登陆的Form"""
 
-    user_name = fields.TextField(u'昵称或邮箱', validators=[validators.required()])
+    user_name = fields.TextField(u'昵称', validators=[validators.required()])
     password = fields.PasswordField(u'密码', validators=[validators.required()])
 
     def validate_user_name(self, field):
         user = self.get_user()
         if not user:
-            raise validators.ValidationError('用户名不存在')
+            raise validators.ValidationError(u'昵称不存在')
 
         if not user.check_password(self.password.data):
-            raise validators.ValidationError('密码错误')
+            raise validators.ValidationError(u'密码错误')
 
     def get_user(self):
-        user = User.query.filter(User.nick_name == self.user_name.data).first()
-        if not user:
-            user = User.query.filter(User.login_name == self.user_name.data).first()
+        user = AdminUser.query.filter(AdminUser.name == self.user_name.data).first()
         return user
 
 
 class RegisterForm(form.Form):
     """定义用户注册的form"""
 
-    login = fields.TextField(u'昵称', validators=[validators.required()])  # nick_name
-    email = fields.TextField(u'邮箱')  # login_name
-    password = fields.PasswordField(u'密码', validators=[validators.required()])  # password
+    user_name = fields.TextField(u'昵称', validators=[validators.required()])
+    password = fields.PasswordField(u'密码', validators=[validators.required()])
 
-    def validate_login(self, field):
-        if User.query.filter(User.name == field.data).count() > 0:
+    def validate_user_name(self, field):
+        if AdminUser.query.filter(AdminUser.name == field.data).count() > 0:
             raise validators.ValidationError(u'昵称重复')
-        if User.query.filter(User.name == field.data).count() > 0:
-            raise validators.ValidationError(u'昵称重复')
-
-    def validate_email(self, field):
-        if User.query.filter(User.name == field.data).count() > 0:
-            raise validators.ValidationError(u'邮箱重复')
-        if User.query.filter(User.name == field.data).count() > 0:
-            raise validators.ValidationError(u'邮箱重复')
 
 
 class MyAnonymousUser(object):
@@ -68,8 +57,22 @@ class MyAnonymousUser(object):
     def get_id(self):
         return
 
-    def is_admin(self):
+    def is_superuser(self):
+        """猫吧超级超级管理员权限"""
         return False
+
+    def is_normal_superuser(self):
+        """猫吧普通管理员权限"""
+        return False
+
+    def is_manageruser(self):
+        """酒吧超级管理员权限"""
+        return False
+
+    def is_normal_manageruser(self):
+        """酒吧普通管理员权限"""
+        return False
+
 
 login_manager = login.LoginManager()
 login_manager.setup_app(app)
@@ -78,7 +81,7 @@ login_manager.anonymous_user = MyAnonymousUser
 
 @login_manager.user_loader
 def load_user(user_id):
-    return User.query.filter(User.id == user_id).first()
+    return AdminUser.query.filter(AdminUser.id == user_id).first()
 
 
 def login_view():
@@ -86,19 +89,19 @@ def login_view():
     if helpers.validate_form_on_submit(login_form):
         user = login_form.get_user()
         login_user_with_remember(user)
-        if user.admin:
-            return redirect('/admin')  # todo-lyw 这里不该使用绝对编码
+        if user.is_normal_superuser() or user.is_normal_manageruser():
+            return redirect('/admin')
 
         return redirect('/admin')
 
-    return render_template('admin_pub/auth.html', form=login_form)
+    return render_template('admin/auth.html', form=login_form)
 
 
 def register_view():
     register_form = RegisterForm(request.form)
     if helpers.validate_form_on_submit(register_form):
-        user = User(login_name=register_form.email.data, password=register_form.password.data,
-                    login_type=0, nick_name=register_form.login.data)
+        user = AdminUser(name=register_form.user_name.data, password=register_form.password.data,
+                         admin='1111')
         db.add(user)
         db.commit()
 
@@ -108,7 +111,7 @@ def register_view():
 
         return redirect('/admin')
 
-    return render_template('admin_pub/auth.html', form=register_form)
+    return render_template('admin/auth.html', form=register_form)
 
 
 @login.login_required
