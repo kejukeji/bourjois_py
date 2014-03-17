@@ -3,20 +3,29 @@
 <head>
     <title></title>
 <script type="text/javascript">
-    getLocation();
-    function getLocation() {
-        if (navigator.geolocation) {
-            navigator.geolocation.getCurrentPosition(showPosition);
-        }
-        else {
-            alert("无法获取您的位置！");
-        }
-    }
-    function showPosition(position) {
-        var Latitude = position.coords.latitude;
-        var Longitude= position.coords.longitude;
-        window.location.href="/storelist?lat="+Latitude+"&lng="+Longitude
-    }
+
+        var fl = "{{ flag }}"
+        var f = false;
+        if(fl == ''){
+                getLocation();
+                function getLocation() {
+                    if (navigator.geolocation) {
+                        navigator.geolocation.getCurrentPosition(showPosition);
+                    }
+                    else {
+                        alert("无法获取您的位置！");
+                    }
+                }
+                function showPosition(position) {
+                    var Latitude = position.coords.latitude;
+                    var Longitude= position.coords.longitude;
+                    f = true;
+                    window.location.href="/storelist?lat="+Latitude+"&lng="+Longitude;
+                }
+                if(f == false) {
+                     window.location.href="/storelist?flag="+0;
+                }
+            }
 </script>
 </head>
 <body>
@@ -43,7 +52,7 @@
         <input type="text" placeholder="请输入搜索信息"/>
         <a href="#" type="button">搜索</a>
     </div>
-{% if markd == None %}
+{% if markd != 'first' %}
     {% if stores_count == 1 %}
         <div>
             {{ store.name }}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;距离{{ store.distance }}米
