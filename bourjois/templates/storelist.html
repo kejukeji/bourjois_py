@@ -2,10 +2,13 @@
 <html>
 <head>
     <title></title>
+<script src="/static/js/jquery.js"></script>
 <script type="text/javascript">
 
         var fl = "{{ flag }}"
         var f = false;
+        var Latitude='';
+        var Longitude='';
         if(fl == ''){
                 getLocation();
                 function getLocation() {
@@ -17,15 +20,33 @@
                     }
                 }
                 function showPosition(position) {
-                    var Latitude = position.coords.latitude;
-                    var Longitude= position.coords.longitude;
+                    Latitude = position.coords.latitude;
+                    Longitude= position.coords.longitude;
                     f = true;
                     window.location.href="/storelist?lat="+Latitude+"&lng="+Longitude;
                 }
                 if(f == false) {
                      window.location.href="/storelist?flag="+0;
                 }
-            }
+        }
+
+
+        $(document).ready(function(){
+
+
+
+        $(".cityButton").each(function(){
+            $(this).click(function(){
+                cityId = $(this).attr('id');
+                window.location.href="citystorelist?lat="+Latitude+"&lng="+Longitude+"&cityid="+cityId;
+            });
+
+        })
+
+
+        });
+
+
 </script>
 </head>
 <body>
@@ -36,17 +57,17 @@
 </header>
 <section>
     <div>
-        <a href="#" type="button">北京</a>
-        <a href="#" type="button">上海</a>
-        <a href="#" type="button">杭州</a>
-        <a href="#" type="button">广州</a>
-        <a href="#" type="button">长沙</a>
+        <button id="1"  class="cityButton">北京</button>
+        <button id="2"  class="cityButton">上海</button>
+        <button id="3"  class="cityButton">杭州</button>
+        <button id="4"  class="cityButton">广州</button>
+        <button id="5"  class="cityButton">长沙</button>
         <br>
-        <a href="#" type="button">香港</a>
-        <a href="#" type="button">苏州</a>
-        <a href="#" type="button">南京</a>
-        <a href="#" type="button">武汉</a>
-        <a href="#" type="button">成都</a>
+        <button id="6"  class="cityButton">香港</button>
+        <button id="7"  class="cityButton">苏州</button>
+        <button id="8"  class="cityButton">南京</button>
+        <button id="9"  class="cityButton">武汉</button>
+        <button id="10"  class="cityButton">成都</button>
     </div>
     <div>
         <input type="text" placeholder="请输入搜索信息"/>

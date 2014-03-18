@@ -34,4 +34,5 @@ admin.add_view(StoresView(db, name=u'门店', endpoint='superuser', category=u"�
 app.add_url_rule('/index','index',index)
 app.add_url_rule('/to_storelist','to_store_list',to_store_list, methods=('GEt','POST'))
 app.add_url_rule('/storelist','get_city_by_position',get_city_by_position,methods=['GET','POST'])
+app.add_url_rule('/citystorelist','get_cityStoreList',get_cityStoreList,methods=['GET','POST'])
 
