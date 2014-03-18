@@ -1,17 +1,16 @@
 <!DOCTYPE html>
 <html>
 <head>
+    <meta charset="UTF-8">
     <title></title>
 <script src="/static/js/jquery.js"></script>
 <script type="text/javascript">
-
-        var fl = "{{ flag }}"
+        $(document).ready(function(){
+        var fl = "{{ flag }}";
         var f = false;
-        var Latitude='';
-        var Longitude='';
-        if(fl == ''){
-                getLocation();
-                function getLocation() {
+        var Latitude=0.0;
+        var Longitude=0.0;
+        function getLocation() {
                     if (navigator.geolocation) {
                         navigator.geolocation.getCurrentPosition(showPosition);
                     }
@@ -19,6 +18,9 @@
                         alert("无法获取您的位置！");
                     }
                 }
+        if(fl == ''){
+                getLocation();
+
                 function showPosition(position) {
                     Latitude = position.coords.latitude;
                     Longitude= position.coords.longitude;
@@ -31,22 +33,15 @@
         }
 
 
-        $(document).ready(function(){
-
-
-
-        $(".cityButton").each(function(){
-            $(this).click(function(){
-                cityId = $(this).attr('id');
-                window.location.href="citystorelist?lat="+Latitude+"&lng="+Longitude+"&cityid="+cityId;
-            });
-
-        })
-
-
+            $(".cityButton").each(function(){
+                $(this).click(function(){
+                    cityId = $(this).attr('id');
+                    alert(Latitude+"1111111"+Longitude);
+                    f = true;
+                    window.location.href="citystorelist?lat="+Latitude+"&lng="+Longitude+"&cityid="+cityId+"&flag="+0;
+                });
+            })
         });
-
-
 </script>
 </head>
 <body>

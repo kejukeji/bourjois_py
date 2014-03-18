@@ -25,14 +25,15 @@ def get_stores_list(city_id,latitude,longitude,flag):
                             store=store,
                             flag=flag)
         elif stores_count > 1:
-            storeList = find_by_city(c_id)
-            for stores in storeList:
-                stores.distance = get_distance(stores.latitude,stores.longitude,latitude,longitude)
-            store = sorted(storeList.items(),key=lambda distance:distance[1])
+            storeList = find_by_city(city_id)
+            #for stores in storeList:
+            sorteds = lambda stores: get_distance(stores.latitude,stores.longitude,latitude,longitude)
+            store = sorted(storeList,key=sorteds)
             return render_template('storelist.html',
                                    store=store,
                                    stores_count=stores_count,
-                                   flag=flag)
+                                   first='true',
+                                    flag=flag)
         else:
             return ''
 

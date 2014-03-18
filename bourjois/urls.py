@@ -10,12 +10,15 @@ from flask.ext.admin import Admin
 from bourjois.views.admin_page.index import HomeView
 from bourjois.views.admin_page.stroes import StoresView
 from bourjois.restfuls.ajax import *
+from bourjois.views.admin_page.admin_login import login_view, register_view
+
 
 
 
 
 #定义访问control路径
-
+app.add_url_rule('/login', 'login_view', login_view, methods=('GET', 'POST'))
+app.add_url_rule('/register','login_register', register_view, methods=('GET','POST'))
 
 api = restful.Api(app)
 

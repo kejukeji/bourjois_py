@@ -19,7 +19,7 @@ from bourjois.utils.others import *
 from bourjois.utils.ex_file import *
 from bourjois.models.stores import *
 from bourjois.var import *
-from bourjois.models.user import *
+from bourjois.models.admin_user import *
 
 log = logging.getLogger("flask-admin.sqla")
 
@@ -56,6 +56,9 @@ class StoresView(ModelView):
     form_overrides = dict(
         intro=TextAreaField
     )
+
+    def is_accessible(self):
+        return login.current_user.is_normal_manageruser()
 
     def scaffold_form(self):
         form_class = super(StoresView, self).scaffold_form()
@@ -188,13 +191,13 @@ class StoresView(ModelView):
     def _has_user(self, user, model=None):
         """检查用户是否存在，不存在返回False"""
         if model is None:
-            return bool(User.query.filter(User.name == user).count())
+            return bool(AdminUser.query.filter(AdminUser.name == user).count())
         else:
             return False
 
     def _get_user(self, form_dict, pub_id):
         """通过字典返回一个user类"""
-        return User(name=form_dict['user'])
+        return AdminUser(name=form_dict['user'])
 
     def _get_stores(self, form_dict):
         """通过字典返回一个stores类"""
